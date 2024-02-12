@@ -1,1 +1,5 @@
 # Ankylosaurus
+
+![Ankylosaurus](/data/images/Dinosaurs/Ankylosaurus/Ankylosaurus.png)
+
+Ankylosaurus is a sturdy dinosaur that classifies as tank. It has a lot of hit points and will shake the ground and enemies alike in close combat, but it is rather slow compared to other dinosaurs.
