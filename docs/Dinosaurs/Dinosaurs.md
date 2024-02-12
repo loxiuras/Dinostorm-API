@@ -42,7 +42,7 @@ Pachycephalosaurus is among the fastest dinosaurs around and well-suited for “
 
 Parasaurolophus classifies as an all-rounder; it has evenly distributed strengths and no real weakness. Its running speed is a little higher than average, and it has a few tricks up its sleeve.
 
-# [Tyrannosaurus Rex](/docs/Dinosaurs/Tyrannosaurus Rex.md)
+# [Tyrannosaurus-Rex](/docs/Dinosaurs/Tyrannosaurus-Rex.md)
 
 ![Tyrannosaurus Rex](/data/images/Dinosaurs/Tyrannosaurus-Rex/Tyrannosaurus-Rex.png)
 
