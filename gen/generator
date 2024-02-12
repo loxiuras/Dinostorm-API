@@ -1,0 +1,149 @@
+#!/usr/bin/env php
+<?php
+
+class Helper
+{
+    private array $dinosaurs = [];
+    private array $weapons = [];
+
+    public function execute(): void
+    {
+        $this->generateDinosaurs();
+        $this->generateDinosaurList();
+
+        $this->generateWeapons();
+        $this->generateWeaponList();
+    }
+
+    private function getDirectoryFiles(string $directory): array
+    {
+        return array_diff(scandir(__DIR__ . "/../data/{$directory}"), ['.', '..']);
+    }
+
+    private function writeDocsFileContent(string $name, string $content)
+    {
+        $location = __DIR__ . "/../docs/{$name}";
+        file_put_contents($location, $content);
+    }
+
+    private function getDataFileContent(string $name)
+    {
+        $location = __DIR__ . "/../data/{$name}";
+
+        if (!file_exists($location)) {
+            return [];
+        }
+
+        return json_decode(file_get_contents($location));
+    }
+
+    private function refreshDocsDirectory(string $name): void
+    {
+        $location = __DIR__ . "/../docs/{$name}";
+        if (file_exists($location)) {
+            array_map('unlink', glob("$location/*"));
+            rmdir($location);
+        }
+        mkdir($location);
+    }
+
+    private function generateDinosaurs(): void
+    {
+        $dinosaurs = $this->getDirectoryFiles('Dinosaurs');
+
+        $this->refreshDocsDirectory('Dinosaurs');
+
+        foreach ($dinosaurs as $dinosaur) {
+            $dinosaur = $this->getDataFileContent("Dinosaurs/$dinosaur");
+            $nameSlug = str_replace(' ', '-', $dinosaur->name);
+
+            $content = <<<HTML
+# $dinosaur->name
+
+![$dinosaur->name](/data/$dinosaur->image)
+
+$dinosaur->description
+HTML;
+
+            $this->writeDocsFileContent(
+                "Dinosaurs/{$nameSlug}.md",
+                $content,
+            );
+
+            $this->dinosaurs[] = $dinosaur;
+        }
+    }
+
+    private function generateDinosaurList(): void
+    {
+        $content = "# Dinosaurs\n\n";
+
+        foreach ($this->dinosaurs as $dinosaur) {
+            $nameSlug = str_replace(' ', '-', $dinosaur->name);
+
+            $content .= <<<HTML
+# [$nameSlug](/docs/Dinosaurs/$nameSlug.md)
+
+![$dinosaur->name](/data/$dinosaur->image)
+
+$dinosaur->description\n\n
+HTML;
+        }
+
+        $this->writeDocsFileContent(
+            "Dinosaurs/Dinosaurs.md",
+            $content,
+        );
+    }
+
+    private function generateWeapons(): void
+    {
+        $weapons = $this->getDirectoryFiles('Weapons');
+
+        $this->refreshDocsDirectory('Weapons');
+
+        foreach ($weapons as $weapon) {
+            $weapon = $this->getDataFileContent("Weapons/$weapon");
+            $nameSlug = str_replace(' ', '-', $weapon->name);
+
+            $content = <<<HTML
+# $weapon->name
+
+![$weapon->name](/data/$weapon->image)
+
+$weapon->description
+HTML;
+
+            $this->writeDocsFileContent(
+                "Weapons/{$nameSlug}.md",
+                $content,
+            );
+
+            $this->weapons[] = $weapon;
+        }
+    }
+
+    private function generateWeaponList(): void
+    {
+        $content = "# Weapons\n\n";
+
+        foreach ($this->weapons as $weapon) {
+            $nameSlug = str_replace(' ', '-', $weapon->name);
+
+            $content .= <<<HTML
+# [$nameSlug](/docs/Weapons/$nameSlug.md)
+
+![$weapon->name](/data/$weapon->image)
+
+$weapon->description\n\n
+HTML;
+        }
+
+        $this->writeDocsFileContent(
+            "Weapons/Weapons.md",
+            $content,
+        );
+    }
+}
+
+(new Helper())->execute();
